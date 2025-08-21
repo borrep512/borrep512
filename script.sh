@@ -4,6 +4,7 @@ ping -c 5 google.com
 # Sincronizar reloj
 
 timedatectl set-ntp true
+echo "KEYMAP=es " > /etc/vconsole.conf
 
 # Crear particiones automáticamente
 parted /dev/sda --script \
@@ -53,7 +54,6 @@ echo "123456" | passwd --stdin root
 sudo pacman -S --noconfirm grub efibootmgr networkmanager network-manager-applet dialog os-prober mtools dosfstools base-devel linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
 
 # Instalar GRUB EFI
-pacman -S --noconfirm grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchLinux
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -61,9 +61,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 systemctl enable sshd
 systemctl enable org.cups.cupsd
-
-
-
 EOF
 
 
