@@ -4,7 +4,7 @@ ping -c 5 google.com
 # Sincronizar reloj
 
 timedatectl set-ntp true
-echo "KEYMAP=es " > /etc/vconsole.conf
+echo "KEYMAP=es" > /etc/vconsole.conf
 
 # Crear particiones automáticamente
 parted /dev/sda --script \
@@ -35,7 +35,7 @@ ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
 
 # Configurar idioma inglés (US)
-echo "es_MX.UTF-8 UTF-8" > /etc/locale.gen
+sed -i 's/^#es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo "LANG=es_MX.UTF-8" > /etc/locale.conf
 
@@ -48,7 +48,7 @@ cat <<EOT > /etc/hosts
 EOT
 
 # Establecer contraseña de root
-echo "123456" | passwd --stdin root
+echo "root:123456" | chpasswd
 
 # Red y vbox
 sudo pacman -S --noconfirm grub efibootmgr networkmanager network-manager-applet dialog os-prober mtools dosfstools base-devel linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
@@ -62,8 +62,6 @@ systemctl enable NetworkManager
 systemctl enable sshd
 systemctl enable org.cups.cupsd
 EOF
-
-
 
 # Desmontar y reiniciar
 umount -R /mnt
