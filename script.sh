@@ -24,7 +24,7 @@ mkdir -p /mnt/boot/efi
 mount /dev/sda1 /mnt/boot/efi
 
 # 7. Instalar base y kernel
-pacstrap /mnt base linux linux-firmware vim nano sudo
+pacstrap /mnt base base-devel linux linux-firmware vim nano sudo
 
 # 8. Generar fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -62,11 +62,16 @@ echo "archuser:123456" | chpasswd
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 # Paquetes extra (VBox + red + utilidades)
-pacman -S --noconfirm grub efibootmgr networkmanager network-manager-applet dialog os-prober mtools dosfstools base-devel linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
+pacman -S --noconfirm grub efibootmgr networkmanager dialog mtools dosfstools linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
 
-# Instalar GRUB EFI correctamente
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+# Instalar GRUB en EFI (forzado, con recheck)
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
+
+# Crear configuración GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# Registrar entrada en EFI (asegura arranque en VBox)
+efibootmgr --create --disk /dev/sda --part 1 --label "ArchLinux" --loader "\EFI\GRUB\grubx64.efi"
 
 # Habilitar servicios
 systemctl enable NetworkManager
@@ -78,3 +83,4 @@ EOF
 # 10. Desmontar y reiniciar
 umount -R /mnt
 reboot
+
