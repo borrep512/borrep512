@@ -26,15 +26,18 @@ mount ${DISK}2 /mnt
 mkdir /mnt/boot
 mount ${DISK}1 /mnt/boot
 
-# --- 4. Instalar base ---
-echo "Instalando sistema base..."
-pacstrap /mnt base linux linux-firmware vim sudo
+# --- 4. Instalar base y utilidades ---
+echo "Instalando sistema base y utilidades..."
+pacstrap /mnt base linux linux-firmware vim sudo nano bash-completion
 
-# --- 5. Configuración ---
+# --- 5. Generar fstab ---
 echo "Generando fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
+# --- 6. Configuración dentro del chroot ---
 arch-chroot /mnt /bin/bash <<EOF
+set -e
+
 # Zona horaria
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
@@ -57,12 +60,36 @@ echo "$USER:$PASSWORD" | chpasswd
 # Sudoers
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# GRUB
+# --- Instalar bootloader ---
 pacman -S --noconfirm grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# --- Configuración de red básica (ethernet) ---
+pacman -S --noconfirm systemd-networkd systemd-resolvconf
+
+# Crear archivo de red para DHCP (cableada)
+mkdir -p /etc/systemd/network
+cat > /etc/systemd/network/20-wired.network <<EON
+[Match]
+Name=en*
+
+[Network]
+DHCP=yes
+EON
+
+# Habilitar servicios de red
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+systemctl start systemd-networkd
+systemctl start systemd-resolved
+
+# Crear enlace resolv.conf
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
 EOF
 
-# --- 6. Desmontar y reiniciar ---
+# --- 7. Desmontar y reiniciar ---
 umount -R /mnt
 echo "Instalación finalizada. Reinicia la máquina y quita la ISO."
+
