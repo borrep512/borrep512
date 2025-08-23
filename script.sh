@@ -1,86 +1,68 @@
-# ==============================
-# Instalador Arch Linux en VBox (EFI)
-# ==============================
+#!/bin/bash
+set -e  # Salir si hay un error
 
-# 1. Conectar y verificar red
-ping -c 3 google.com
+# --- Variables ---
+DISK="/dev/sda"
+HOSTNAME="archvm"
+USER="alumno"
+PASSWORD="arch123"   # Cambia esto por una contraseña segura
+LOCALE="es_ES.UTF-8"
+TIMEZONE="Europe/Madrid"
 
-# 2. Sincronizar reloj
-timedatectl set-ntp true
+# --- 1. Particionado ---
+echo "Particionando disco..."
+sgdisk -Z $DISK                   # Borrar disco
+sgdisk -n 1:0:+512M -t 1:ef00 $DISK  # EFI
+sgdisk -n 2:0:0 -t 2:8300 $DISK      # Root
 
-# 3. Teclado en consola
-echo "KEYMAP=es" > /etc/vconsole.conf
+# --- 2. Formateo ---
+echo "Formateando particiones..."
+mkfs.fat -F32 ${DISK}1
+mkfs.ext4 ${DISK}2
 
-# 4. Crear particiones automáticamente (GPT: EFI + root)
-parted /dev/sda --script \
-  mklabel gpt \
-  mkpart ESP fat32 1MiB 513MiB \
-  set 1 esp on \
-  mkpart primary ext4 513MiB 100%
+# --- 3. Montaje ---
+echo "Montando sistemas de archivos..."
+mount ${DISK}2 /mnt
+mkdir /mnt/boot
+mount ${DISK}1 /mnt/boot
 
-# 5. Formatear particiones
-mkfs.fat -F32 /dev/sda1
-mkfs.ext4 /dev/sda2
+# --- 4. Instalar base ---
+echo "Instalando sistema base..."
+pacstrap /mnt base linux linux-firmware vim sudo
 
-# 6. Montar particiones
-mount /dev/sda2 /mnt
-mkdir -p /mnt/boot/efi
-mount /dev/sda1 /mnt/boot/efi
-
-# 7. Instalar base y kernel
-pacstrap /mnt base linux linux-firmware vim nano sudo
-
-# 8. Generar fstab
+# --- 5. Configuración ---
+echo "Generando fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# 9. Entrar al sistema
-arch-chroot /mnt /bin/bash <<'EOF'
-
-# ==============================
-# Configuración dentro de Arch
-# ==============================
-
+arch-chroot /mnt /bin/bash <<EOF
 # Zona horaria
-ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
 
-# Locales
-sed -i 's/^#es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+# Localización
+echo "$LOCALE UTF-8" > /etc/locale.gen
 locale-gen
-echo "LANG=es_MX.UTF-8" > /etc/locale.conf
+echo "LANG=$LOCALE" > /etc/locale.conf
 
-# Hostname y hosts
-echo "herculerch" > /etc/hostname
-cat <<EOT > /etc/hosts
-127.0.0.1    localhost
-::1          localhost
-127.0.1.1    herculerch.localdomain herculerch
-EOT
+# Hostname
+echo "$HOSTNAME" > /etc/hostname
 
 # Root password
-echo "root:123456" | chpasswd
+echo "root:$PASSWORD" | chpasswd
 
-# Crear usuario normal
-useradd -m -G wheel -s /bin/bash archuser
-echo "archuser:123456" | chpasswd
-echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+# Usuario normal
+useradd -m -G wheel -s /bin/bash $USER
+echo "$USER:$PASSWORD" | chpasswd
 
-# Paquetes extra (VBox + red + utilidades)
-pacman -S --noconfirm grub efibootmgr networkmanager network-manager-applet dialog os-prober mtools dosfstools base-devel linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
+# Sudoers
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# Instalar GRUB EFI correctamente
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+# GRUB
+pacman -S --noconfirm grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-
-# Habilitar servicios
-systemctl enable NetworkManager
-systemctl enable sshd
-systemctl enable org.cups.cupsd
-
 EOF
 
-# 10. Desmontar y reiniciar
+# --- 6. Desmontar y reiniciar ---
 umount -R /mnt
-reboot
-
-
+echo "Instalación finalizada. Reinicia la máquina y quita la ISO."
