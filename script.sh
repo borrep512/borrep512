@@ -4,6 +4,7 @@ set -e  # Salir si hay un error
 # --- Variables ---
 DISK="/dev/sda"
 HOSTNAME="herculerch"
+USER="herculex"
 PASSWORD="123456"   # Cambia esto por una contraseña segura
 LOCALE="es_ES.UTF-8"
 TIMEZONE="Europe/Madrid"
@@ -48,6 +49,13 @@ echo "$HOSTNAME" > /etc/hostname
 
 # Root password
 echo "root:$PASSWORD" | chpasswd
+
+# Usuario normal
+useradd -m -G wheel -s /bin/bash $USER
+echo "$USER:$PASSWORD" | chpasswd
+
+# Sudoers
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # GRUB
 pacman -S --noconfirm grub efibootmgr
