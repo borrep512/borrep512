@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # 1. Conectar y verificar red
 ping -c 3 google.com
 
@@ -24,10 +26,10 @@ mkdir -p /mnt/boot/efi
 mount /dev/sda1 /mnt/boot/efi
 
 # 7. Instalar base y kernel
-pacstrap /mnt base base-devel linux linux-firmware vim nano sudo
+pacstrap /mnt base base-devel linux linux-firmware vim nano sudo efibootmgr grub
 
 # 8. Generar fstab
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt > /mnt/etc/fstab
 
 # 9. Entrar al sistema
 arch-chroot /mnt /bin/bash <<'EOF'
@@ -40,8 +42,8 @@ arch-chroot /mnt /bin/bash <<'EOF'
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
 
-# Locales
-sed -i 's/^#es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+# Locales (descomentar locale es_MX.UTF-8 UTF-8)
+sed -i '/^#es_MX.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 locale-gen
 echo "LANG=es_MX.UTF-8" > /etc/locale.conf
 
@@ -62,16 +64,16 @@ echo "archuser:123456" | chpasswd
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 # Paquetes extra (VBox + red + utilidades)
-pacman -S --noconfirm grub efibootmgr networkmanager dialog mtools dosfstools linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
+pacman -S --noconfirm networkmanager dialog mtools dosfstools linux-headers cups reflector openssh git xdg-utils xdg-user-dirs virtualbox-guest-utils
 
-# Instalar GRUB en EFI (forzado, con recheck)
+# Instalar GRUB en EFI (asegurar /boot/efi montado)
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 
 # Crear configuración GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# Registrar entrada en EFI (asegura arranque en VBox)
-efibootmgr --create --disk /dev/sda --part 1 --label "ArchLinux" --loader "\EFI\GRUB\grubx64.efi"
+# Añadir entrada EFI (opcional, a veces no es necesario si grub-install lo hace automáticamente)
+# efibootmgr --create --disk /dev/sda --part 1 --label "ArchLinux" --loader "\EFI\GRUB\grubx64.efi"
 
 # Habilitar servicios
 systemctl enable NetworkManager
@@ -80,7 +82,10 @@ systemctl enable org.cups.cupsd
 
 EOF
 
-# 10. Desmontar y reiniciar
+# 10. Desmontar todo con seguridad y sincronizar
+sync
 umount -R /mnt
+
+# 11. Reiniciar sistema para boot EFI desde disco
 reboot
 
