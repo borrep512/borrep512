@@ -32,6 +32,7 @@ mkdir -p /mnt/proc
 mkdir -p /mnt/sys
 mkdir -p /mnt/dev
 mkdir -p /mnt/run
+mkdir -p /mnt/tmp
 mount --types proc /proc /mnt/proc
 mount --rbind /sys /mnt/sys
 mount --make-rslave /mnt/sys
