@@ -28,19 +28,19 @@ echo "[+] Particiones 3 completado."
 sleep 5
 
 #Instalaciones
-pacstrap -K /mnt base 
+arch-chroot /mnt pacman -S --noconfirm base
 echo "[+] Base instalado."
 sleep 15
-pacstrap -K /mnt linux
+arch-chroot /mnt pacman -S --noconfirm linux
 echo "[+] Linux instalado."
 sleep 15
-pacstrap -K /mnt linux-firmware
+arch-chroot /mnt pacman -S --noconfirm linux-firmware
 echo "[+] Linux firmware instalado."
 sleep 15
-pacstrap -K /mnt vim
+arch-chroot /mnt pacman -S --noconfirm vim
 echo "[+] Vim instalado."
 sleep 15
-pacstrap -K /mnt networkmanager
+arch-chroot /mnt pacman -S --noconfirm networkmanager
 echo "[+] NetworkManager instalado."
 sleep 15
 
