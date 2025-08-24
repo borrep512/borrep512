@@ -30,8 +30,12 @@ mount ${DISK}1 /mnt/boot
 
 # --- 4. Instalar base ---
 echo "Instalando sistema base..."
-pacstrap /mnt base linux linux-firmware sudo nano vim bash-completion systemd-networkd systemd-resolvconf
-
+pacstrap /mnt base 
+pacstrap /mnt linux 
+pacstrap /mnt linux-firmware 
+pacstrap /mnt sudo 
+pacstrap /mnt nano 
+pacstrap /mnt vim bash-completion
 
 # --- 5. Configuración ---
 echo "Generando fstab..."
