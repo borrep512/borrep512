@@ -1,5 +1,5 @@
 loadkeys es   # Cambiar teclado a español
-ping archlinux.org  # Probar conexión a internet
+ping archlinux.org -c 5 # Probar conexión a internet
 parted /dev/sda --script mklabel gpt
 parted /dev/sda --script mkpart ESP fat32 1MiB 301MiB
 parted /dev/sda --script set 1 esp on
