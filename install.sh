@@ -27,6 +27,17 @@ mount /dev/sda1 /mnt/boot
 echo "[+] Particiones 3 completado."
 sleep 5
 
+#Pseudsistemas
+mount --types proc /proc /mnt/proc
+mount --rbind /sys /mnt/sys
+mount --make-rslave /mnt/sys
+mount --rbind /dev /mnt/dev
+mount --make-rslave /mnt/dev
+mount --bind /run /mnt/run  # opcional pero recomendable
+echo "[+] Pseudosistemas montados."
+sleep 10
+
+
 #Instalaciones
 arch-chroot /mnt pacman -S --noconfirm base
 echo "[+] Base instalado."
