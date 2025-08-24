@@ -64,8 +64,8 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # --- Red ---
-pacman -S --noconfirm networkmanager dhclient
-systemctl enable NetworkManager
+pacman -Sy --noconfirm networkmanager dhclient
+systemctl enable NetworkManager.service
 
 # Activar interfaz automáticamente y obtener IP
 INTERFACE=\$(ip link | awk -F: '/^[0-9]+: e/{print \$2}' | tr -d ' ')
