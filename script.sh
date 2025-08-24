@@ -10,6 +10,7 @@ LOCALE="es_ES.UTF-8"
 TIMEZONE="Europe/Madrid"
 
 # --- 1. Particionado ---
+pacman -Sy
 echo "Particionando disco..."
 sgdisk -Z $DISK                   # Borrar disco
 sgdisk -n 1:0:+512M -t 1:ef00 $DISK  # EFI
@@ -63,7 +64,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
 #Red
-pacman -S networkmanager
+pacman -Sy networkmanager
 systemctl enable NetworkManager
 EOF
 
