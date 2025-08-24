@@ -25,7 +25,12 @@ mkdir /mnt/boot
 mount ${DISK}1 /mnt/boot
 
 # --- 4. Instalar base ---
-pacstrap /mnt base linux linux-firmware vim sudo
+pacstrap /mnt base
+pacstrap /mnt linux
+pacstrap /mnt linux-firmware
+pacstrap /mnt vim
+pacstrap /mnt sudo
+
 
 # --- 5. Configuración ---
 genfstab -U /mnt >> /mnt/etc/fstab
