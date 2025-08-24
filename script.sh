@@ -10,7 +10,7 @@ LOCALE="es_ES.UTF-8"
 TIMEZONE="Europe/Madrid"
 
 # --- 1. Particionado ---
-pacman -Sy
+pacman -Sy --noconfirm
 echo "Particionando disco..."
 sgdisk -Z $DISK                   # Borrar disco
 sgdisk -n 1:0:+512M -t 1:ef00 $DISK  # EFI
@@ -29,8 +29,7 @@ mount ${DISK}1 /mnt/boot
 
 # --- 4. Instalar base ---
 echo "Instalando sistema base..."
-pacstrap /mnt base linux linux-firmware sudo nano vim bash-completion systemd-networkd systemd-resolvconf
-
+pacstrap /mnt base linux linux-firmware sudo nano vim bash-completion
 
 # --- 5. Configuración ---
 echo "Generando fstab..."
@@ -59,24 +58,23 @@ echo "$USER:$PASSWORD" | chpasswd
 # Sudoers
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# GRUB
+# GRUB EFI
 pacman -S --noconfirm grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
-#Red
+# --- Red ---
 pacman -S --noconfirm networkmanager dhclient
 systemctl enable NetworkManager
 
 # Activar interfaz automáticamente y obtener IP
-INTERFACE=$(ip link | awk -F: '/^[0-9]+: e/{print $2}' | tr -d ' ')
-ip link set $INTERFACE up
-dhclient $INTERFACE
+INTERFACE=\$(ip link | awk -F: '/^[0-9]+: e/{print \$2}' | tr -d ' ')
+ip link set \$INTERFACE up
+dhclient \$INTERFACE
 
 # Configurar DNS
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
-
 EOF
 
 # --- 6. Desmontar y reiniciar ---
