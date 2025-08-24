@@ -29,7 +29,7 @@ mount /dev/sda1 /mnt/boot
 echo "[+] Particiones 3 completado."
 sleep 5
 
-# --- Preparar pseudo-sistemas ---
+# --- Pseudosistemas ---
 mkdir -p /mnt/{proc,sys,dev,run,tmp}
 mount --types proc /proc /mnt/proc
 mount --rbind /sys /mnt/sys
@@ -40,15 +40,12 @@ mount --bind /run /mnt/run
 echo "[+] Pseudosistemas montados."
 sleep 5
 
-# --- Copiar pacman temporal para instalar base por partes ---
-mkdir -p /mnt/usr/bin /mnt/etc
-cp -a /usr/bin/pacman /mnt/usr/bin/
-cp -a /etc/pacman.conf /mnt/etc/
-
-# --- Instalar base por partes ---
-arch-chroot /mnt pacman -S --noconfirm bash coreutils filesystem
-echo "[+] Base mínimo instalado."
+# --- Instalar base mínimo con pacstrap (incluye pacman) ---
+pacstrap -K /mnt bash coreutils filesystem
+echo "[+] Base mínimo instalado (pacman incluido)."
 sleep 5
+
+# --- Instalar paquetes adicionales por partes usando pacman ---
 arch-chroot /mnt pacman -S --noconfirm linux
 echo "[+] Linux instalado."
 sleep 5
@@ -74,18 +71,17 @@ sed -i 's/#es_ES.UTF-8 UTF-8/es_ES.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 
-# Host y usuarios
+# Hostname y usuarios
 echo "herculerch" > /etc/hostname
 useradd -m -G wheel -s /bin/bash herculex
 echo "root:123456" | chpasswd
 echo "herculex:123456" | chpasswd
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# Instalar GRUB y habilitar NetworkManager
+# GRUB y NetworkManager
 pacman -S --noconfirm grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
-
 systemctl enable NetworkManager
 
 EOF
@@ -93,3 +89,4 @@ EOF
 # --- Desmontar todo ---
 umount -R /mnt
 echo "[+] Todo listo, ya puedes reiniciar y quitar la ISO."
+
