@@ -65,8 +65,18 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
 #Red
-pacman -Sy networkmanager --noconfirm
+pacman -S --noconfirm networkmanager dhclient
 systemctl enable NetworkManager
+
+# Activar interfaz automáticamente y obtener IP
+INTERFACE=$(ip link | awk -F: '/^[0-9]+: e/{print $2}' | tr -d ' ')
+ip link set $INTERFACE up
+dhclient $INTERFACE
+
+# Configurar DNS
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+
 EOF
 
 # --- 6. Desmontar y reiniciar ---
