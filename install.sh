@@ -1,5 +1,5 @@
 loadkeys es   # Cambiar teclado a español
-ping archlinux.org -c 5 # Probar conexión a internet
+ping archlinux.org -c 5  # Probar conexión a internet
 parted /dev/sda --script mklabel gpt
 parted /dev/sda --script mkpart ESP fat32 1MiB 301MiB
 parted /dev/sda --script set 1 esp on
@@ -26,3 +26,7 @@ echo "herculex:123456" | chpasswd
 pacman -S grub efibootmgr --noconfirm
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
+systemctl enable NetworkManager
+exit
+umount -R /mnt
+echo "Ya está"
