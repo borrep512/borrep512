@@ -81,6 +81,7 @@ echo "[+] Grub instalado."
 pacman -S --noconfirm networkmanager
 systemctl enable NetworkManager
 echo "[+] Network manager instalado y operativo."
+echo "[+] Todo listo, ya puedes quitar salir y quitar la ISO."
 sleep 15
 EOF
 
