@@ -53,6 +53,32 @@ pacstrap -K /mnt efibootmgr
 echo "[+] Efibootmgr instalado."
 sleep 15
 
+sleep 60
+
+#Doble instalación
+pacstrap -K /mnt base 
+echo "[+] Base instalado."
+sleep 15
+pacstrap -K /mnt linux
+echo "[+] Linux instalado."
+sleep 15
+pacstrap -K /mnt linux-firmware
+echo "[+] Linux firmware instalado."
+sleep 15
+pacstrap -K /mnt vim
+echo "[+] Vim instalado."
+sleep 15
+pacstrap -K /mnt networkmanager
+echo "[+] NetworkManager instalado."
+sleep 15
+pacstrap -K /mnt grub 
+echo "[+] Grub instalado."
+sleep 15
+pacstrap -K /mnt efibootmgr
+echo "[+] Efibootmgr instalado."
+sleep 15
+
+
 #Fstab
 genfstab -U /mnt >> /mnt/etc/fstab 
 echo "[+] fstab generado." 
