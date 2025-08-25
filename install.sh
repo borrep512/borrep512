@@ -1,4 +1,4 @@
-#SCRIPT 2
+SCRIPT 2
 pacman -Sy --noconfirm
 loadkeys es   # Cambiar teclado a español
 ping archlinux.org -c 5  # Probar conexión a internet
@@ -45,8 +45,12 @@ echo "[+] Vim instalado."
 sleep 15
 pacstrap -K /mnt networkmanager
 echo "[+] NetworkManager instalado."
-pacstrap /mnt grub efibootmgr
-echo "[+] NetworkManager instalado."
+sleep 15
+pacstrap -K /mnt grub 
+echo "[+] Grub instalado."
+sleep 15
+pacstrap -K /mnt efibootmgr
+echo "[+] Efibootmgr instalado."
 sleep 15
 
 #Fstab
@@ -73,8 +77,6 @@ echo "[+] Ajustes de host y de usuarios completados."
 sleep 5
 
 #Grub
-pacman -S grub efibootmgr --noconfirm
-sleep 15
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
 sleep 15
 grub-mkconfig -o /boot/grub/grub.cfg
