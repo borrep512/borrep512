@@ -1,4 +1,4 @@
-SCRIPT 2
+#SCRIPT 2
 pacman -Sy --noconfirm
 loadkeys es   # Cambiar teclado a español
 ping archlinux.org -c 5  # Probar conexión a internet
@@ -49,6 +49,11 @@ pacstrap /mnt grub efibootmgr
 echo "[+] NetworkManager instalado."
 sleep 15
 
+#Fstab
+genfstab -U /mnt >> /mnt/etc/fstab 
+echo "[+] fstab generado." 
+sleep 5
+
 #--Configuración dentro del chroot---
 #Chroot
 arch-chroot /mnt /bin/bash <<EOF
@@ -68,7 +73,6 @@ echo "[+] Ajustes de host y de usuarios completados."
 sleep 5
 
 #Grub
-arch-chroot /mnt /bin/bash
 pacman -S grub efibootmgr --noconfirm
 sleep 15
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
@@ -85,6 +89,5 @@ echo "[+] Todo listo, ya puedes quitar salir y quitar la ISO."
 sleep 15
 EOF
 
-exit
 umount -R /mnt
 echo "[+] Todo listo, ya puedes quitar salir y quitar la ISO."
