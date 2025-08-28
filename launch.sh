@@ -1,27 +1,9 @@
-# Terminal
-super + Return
-	kitty
+#!/bin/sh
+# Terminar instancias previas
+killall -q polybar
 
-# Cerrar ventana
-super + q
-	bspc node -c
+# Esperar que terminen
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
-# Cambiar foco
-super + h
-	bspc node -f west
-super + l
-	bspc node -f east
-super + j
-	bspc node -f south
-super + k
-	bspc node -f north
-
-# Mover ventana
-super + shift + h
-	bspc node -s west
-super + shift + l
-	bspc node -s east
-super + shift + j
-	bspc node -s south
-super + shift + k
-	bspc node -s north
+# Lanzar barra principal
+polybar main &
