@@ -1,0 +1,18 @@
+#!/bin/sh
+# Establecer resolución de pantalla
+xrandr --output <TU_MONITOR> --mode 1920x1080
+
+# Establecer fondo de pantalla con feh
+feh --bg-scale /ruta/a/tu/fondo.jpg &
+
+# Iniciar polybar
+~/.config/polybar/launch.sh &
+
+# Iniciar compositor
+picom &
+
+# Otras aplicaciones
+dunst &
+
+# BSPWM
+exec bspwm
