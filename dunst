@@ -1,0 +1,4 @@
+[global]
+    font = Monospace 10
+    geometry = "300x50-10+50"
+    timeout = 5
