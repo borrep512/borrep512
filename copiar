@@ -1,7 +1,8 @@
-sudo tee /usr/share/xsessions/bspwm.desktop > /dev/null << 'EOF'
-[Desktop Entry]
-Name=bspwm
-Comment=Binary space partitioning window manager
-Exec=bspwm
-Type=Application
-EOF
+git clone https://aur.archlinux.org/yay.git ; cd yay ; makepkg -si ; cd ~ ; rm -rf yay
+sudo pacman -S bc tmux imagemagick ueberzug ffmpegthumbnailer feh mpd mpc ncmpcpp slock telegram-desktop htop xarchiver neofetch leafpad ranger pcmanfm lxappearance dunst maim xclip sxiv xdotool calcurse zathura zathura-pdf-mupdf neovim mpv screenkey --noconfirm --needed
+sudo pacman -S materia-gtk-theme materia-kde papirus-icon-theme --noconfirm --needed
+yay -S picom-ibhagwan-git --noconfirm --needed
+yay -S cava-git cmatrix unimatrix pfetch tty-clock --noconfirm --needed
+sudo pacman -S geany python-pip obs-studio libreoffice-fresh-es kdenlive audacity gimp inkscape --noconfirm --needed
+
+yay -S spotify spotify-adblock-linux --noeditmenu --noconfirm --needed
