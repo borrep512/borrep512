@@ -1,0 +1,7 @@
+sudo tee /usr/share/xsessions/bspwm.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=bspwm
+Comment=Binary space partitioning window manager
+Exec=bspwm
+Type=Application
+EOF
