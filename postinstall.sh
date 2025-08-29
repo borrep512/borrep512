@@ -11,7 +11,7 @@ sudo pacman -S xorg-xev --noconfirm
 sleep 10
 
 #--------------------------------------------------------------------------------
-#2. Instalación de entorno (bspwn, sxhkd, polybar, picom, dunst, feh, thunar, pavucontrol, brightnessctl, kitty, zsh, lightdm xclip, xsel, virtualbox-services, network fuentes)
+#2. Instalación de entorno (bspwn, sxhkd, polybar, picom, dunst, feh, thunar, pavucontrol, brightnessctl, kitty, zsh, lightdm, rofi xclip, xsel, virtualbox-services, network fuentes)
 #--------------------------------------------------------------------------------
 sudo pacman -S bspwm sxhkd --noconfirm
 sudo pacman -S polybar --noconfirm
@@ -23,7 +23,8 @@ sudo pacman -S pavucontrol --noconfirm
 sudo pacman -S brightnessctl --noconfirm
 sudo pacman -S kitty --noconfirm
 sudo pacman -S zsh --noconfirm
-sudo pacman -S lightdm --noconfirm
+sudo pacman -S lightdm lightdm-gtk-greeter --noconfirm
+sudo pacman -S rofi --noconfirm
 sudo pacman -S xclip xsel --noconfirm
 sudo pacman -S virtualbox-guest-utils linux-headers --noconfirm
 sudo pacman -S networkmanager network-manager-applet nm-connection-editor --noconfirm
@@ -47,3 +48,17 @@ sudo systemctl enable NetworkManager
 sudo systemctl enable lightdm
 sudo systemctl enable sshd
 sudo systemctl enable org.cups.cupsd
+sudo systemctl enable vboxservice.service
+
+
+#----------------------------
+#5. Configuraciones generales
+#----------------------------
+
+sudo sed -i '/^\[Seat:\*\]/a greeter-session=lightdm-gtk-greeter' /etc/lightdm/lightdm.conf
+
+
+mkdir -p ~/.config/bspwm ~/.config/sxhkd
+cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/
+cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/
+chmod +x ~/.config/bspwm/bspwmrc
