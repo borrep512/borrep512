@@ -1,18 +1,24 @@
 #!/bin/sh
-# Establecer resolución de pantalla
-xrandr --output <TU_MONITOR> --mode 1920x1080
 
-# Establecer fondo de pantalla con feh
-feh --bg-scale /ruta/a/tu/fondo.jpg &
+# Compositor
+picom --config ~/.config/picom/picom.conf &
 
-# Iniciar polybar
-~/.config/polybar/launch.sh &
+# Barra
+polybar example &
 
-# Iniciar compositor
-picom &
+# Lanzador de atajos
+sxhkd &
 
-# Otras aplicaciones
-dunst &
+# Fondo de pantalla
+feh --bg-scale ~/Imágenes/fondo.png &
 
-# BSPWM
+# Configuración de escritorios
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# Bordes y gaps
+bspc config border_width         2
+bspc config window_gap           10
+bspc config focused_border_color "#89b4fa"
+bspc config normal_border_color  "#1e1e2e"
+
 exec bspwm
