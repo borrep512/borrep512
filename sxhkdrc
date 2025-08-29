@@ -1,27 +1,20 @@
 # Terminal
-super + Return
-	kitty
+ctrl + alt + Return
+    kitty
 
 # Cerrar ventana
 super + q
-	bspc node -c
+    bspc node -close
 
-# Cambiar foco
-super + h
-	bspc node -f west
-super + l
-	bspc node -f east
-super + j
-	bspc node -f south
-super + k
-	bspc node -f north
+# Mover foco
+super + {h,j,k,l}
+    bspc node -f {west,south,north,east}
 
-# Mover ventana
-super + shift + h
-	bspc node -s west
-super + shift + l
-	bspc node -s east
-super + shift + j
-	bspc node -s south
-super + shift + k
-	bspc node -s north
+# Lanzador de apps
+super + d
+    rofi -show drun
+
+# Cambiar de escritorio
+super + {1-9,0}
+    bspc desktop -f {I,II,III,IV,V,VI,VII,VIII,IX,X}
+
