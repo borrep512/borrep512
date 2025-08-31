@@ -1,0 +1,22 @@
+[global]
+    font = Monospace 12
+    geometry = 300x50-10+10
+    frame_width = 1
+    separator_height = 2
+    transparency = 0
+    markup = yes
+
+[urgency_low]
+    background = "#222222"
+    foreground = "#ffffff"
+    timeout = 5
+
+[urgency_normal]
+    background = "#444444"
+    foreground = "#ffffff"
+    timeout = 10
+
+[urgency_critical]
+    background = "#ff0000"
+    foreground = "#ffffff"
+    timeout = 0
