@@ -1,0 +1,6 @@
+* {
+    font-family: monospace;
+    font-size: 12px;
+    background: #222;
+    color: #eee;
+}
