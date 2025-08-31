@@ -1,0 +1,18 @@
+# Monitor
+monitor=Virtual-1,1920x1080@60,0x0,1
+
+# Compositor básico
+general {
+    vsync = 1
+    animations = 1
+    rounding = 5
+}
+
+# Atajos básicos
+bind = SUPER+Return, exec, alacritty
+bind = SUPER+d, exec, tofi
+bind = SUPER+q, close_window
+
+# Lanzar utilidades al inicio
+exec = waybar &
+exec = dunst &
