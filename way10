@@ -1,6 +1,7 @@
 sudo pacman -S hyprland xorg-xwayland wayland wl-clipboard kitty xdg-desktop-portal xdg-desktop-portal-wlr
 mkdir -p ~/.config/hypr
-touch  ~/.config/hypr/hyprland.conf
+
+echo '' > ~/.config/hypr/hyprland.conf
 
 cat <<EOL >> "~/.config/hypr/hyprland.conf"
 
@@ -27,7 +28,7 @@ EOL
 
 sudo pacman -S greetd greetd-gtkgreet
 
-touch "/etc/greetd/config.toml"
+echo '' >  "/etc/greetd/config.toml"
 
 cat <<EOL >> "/etc/greetd/config.toml"
 
