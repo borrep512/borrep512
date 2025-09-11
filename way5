@@ -1,4 +1,0 @@
-{
-    "modules-left": ["workspaces", "window"],
-    "modules-right": ["clock"]
-}
