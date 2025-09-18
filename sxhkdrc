@@ -96,18 +96,18 @@ super + alt + {h,j,k,l}
 super + alt + shift + {h,j,k,l}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
-# Mover izquierda
-super + alt + h
-    bspc node -v -20 0
-
-# Mover derecha
-super + alt + l
-    bspc node -v 20 0
-
 # Mover arriba
-super + alt + k
+super + alt + u
     bspc node -v 0 -20
 
+# Mover derecha
+super + alt + i
+    bspc node -v 20 0
+
 # Mover abajo
-super + alt + j
+super + alt + o
     bspc node -v 0 20
+
+# Mover izquierda
+super + alt + p
+    bspc node -v -20 0
