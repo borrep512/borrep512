@@ -31,13 +31,27 @@ super + m
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
- # focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+# Foco entre ventanas (tiling)
+super + h
+    bspc node -f west
 
- # focus the next/previous window in the current desktop
-super + {_,shift + }c
-	bspc node -f {next,prev}.local.!hidden.window
+super + j
+    bspc node -f south
+
+super + k
+    bspc node -f north
+
+super + n
+    bspc node -f east
+
+# focus the next/previous window in the current desktop
+# Enfocar la siguiente ventana
+ctrl + e
+    bspc node -f next.local.!hidden.window
+
+# Enfocar la ventana anterior
+ctrl + q
+    bspc node -f prev.local.!hidden.window
 
 # expand a window by moving one of its side outward
 super + alt + {h,j,k,l}
